@@ -137,9 +137,13 @@ void configure_xml_channels(pcapng_exporter::PcapngExporter* exporter, AppText* 
 		// Not a channels XML
 		return;
 	}
+	// Clear any DbChannelInfo mappings added before XML was ready
+	// XML network names always take priority over DB names
+	exporter->mappings.clear();
+
 	for (auto channel = channels->FirstChildElement("channel"); channel != NULL; channel = channel->NextSiblingElement("channel"))
 	{
-		configure_xml_channel(exporter, channel);
+	    configure_xml_channel(exporter, channel);
 	}
 }
 
