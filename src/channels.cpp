@@ -151,7 +151,7 @@ void configure_channels(pcapng_exporter::PcapngExporter* exporter, AppText* obj)
 	if (obj->source == AppText::Source::MetaData) {
 		configure_xml_channels(exporter, obj);
 	}
-	if (obj->source == AppText::Source::DbChannelInfo && exporter->mappings.empty()) {
+	if (obj->source == AppText::Source::DbChannelInfo) {
 		configure_db_channel(exporter, obj);
 	}
 }
