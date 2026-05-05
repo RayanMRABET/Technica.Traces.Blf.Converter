@@ -25,7 +25,13 @@ FetchContent_Declare(
   GIT_TAG        10.0.0
 )
 FetchContent_MakeAvailable(tinyxml2)
-find_package(args REQUIRED)
+
+FetchContent_Declare(
+  args
+  GIT_REPOSITORY https://github.com/Taywee/args.git
+  GIT_TAG        6.4.6
+)
+FetchContent_MakeAvailable(args)
 
 add_executable(blf_converter "src/app.cpp" "src/channels.cpp")
 target_link_libraries(blf_converter light_pcapng pcapng_exporter taywee::args tinyxml2::tinyxml2 Vector_BLF)
