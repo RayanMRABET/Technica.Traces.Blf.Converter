@@ -18,7 +18,13 @@ include(cmake/pcapng_exporter.cmake)
 
 add_subdirectory(vector_blf)
 
-find_package(tinyxml2 REQUIRED)
+include(FetchContent)
+FetchContent_Declare(
+  tinyxml2
+  GIT_REPOSITORY https://github.com/leethomason/tinyxml2.git
+  GIT_TAG        10.0.0
+)
+FetchContent_MakeAvailable(tinyxml2)
 find_package(args REQUIRED)
 
 add_executable(blf_converter "src/app.cpp" "src/channels.cpp")
