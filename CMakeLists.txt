@@ -18,23 +18,11 @@ include(cmake/pcapng_exporter.cmake)
 
 add_subdirectory(vector_blf)
 
-include(FetchContent)
-FetchContent_Declare(
-  tinyxml2
-  GIT_REPOSITORY https://github.com/leethomason/tinyxml2.git
-  GIT_TAG        10.0.0
-)
-FetchContent_MakeAvailable(tinyxml2)
-
-FetchContent_Declare(
-  args
-  GIT_REPOSITORY https://github.com/Taywee/args.git
-  GIT_TAG        6.4.6
-)
-FetchContent_MakeAvailable(args)
+find_package(tinyxml2 REQUIRED)
+find_package(args REQUIRED)
 
 add_executable(blf_converter "src/app.cpp" "src/channels.cpp")
-target_link_libraries(blf_converter light_pcapng pcapng_exporter args tinyxml2::tinyxml2 Vector_BLF)
+target_link_libraries(blf_converter light_pcapng pcapng_exporter taywee::args tinyxml2::tinyxml2 Vector_BLF)
 
 install(TARGETS blf_converter COMPONENT blf_converter)
 
