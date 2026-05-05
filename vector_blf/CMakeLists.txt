@@ -9,11 +9,14 @@ file(GLOB BLF_SOURCES "vector_blf/src/Vector/BLF/*.cpp")
 
 include(FetchContent)
 FetchContent_Declare(
-  ZLIB
+  zlib
   GIT_REPOSITORY https://github.com/madler/zlib.git
   GIT_TAG        v1.3.1
 )
-FetchContent_MakeAvailable(ZLIB)
+FetchContent_MakeAvailable(zlib)
+if(NOT TARGET ZLIB::ZLIB)
+  add_library(ZLIB::ZLIB ALIAS zlibstatic)
+endif()
 
 # Vector_BLF do not define a static target, so we create our own
 add_library(Vector_BLF STATIC ${BLF_SOURCES})

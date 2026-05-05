@@ -34,7 +34,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(args)
 
 add_executable(blf_converter "src/app.cpp" "src/channels.cpp")
-target_link_libraries(blf_converter light_pcapng pcapng_exporter taywee::args tinyxml2::tinyxml2 Vector_BLF)
+target_link_libraries(blf_converter light_pcapng pcapng_exporter args tinyxml2::tinyxml2 Vector_BLF)
 
 install(TARGETS blf_converter COMPONENT blf_converter)
 
