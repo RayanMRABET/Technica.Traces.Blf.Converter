@@ -148,6 +148,18 @@ void configure_channels(pcapng_exporter::PcapngExporter* exporter, AppText* obj)
 		configure_xml_channels(exporter, obj);
 	}
 	if (obj->source == AppText::Source::DbChannelInfo) {
-		configure_db_channel(exporter, obj);
+		auto channel_id = (obj->reservedAppText1 >> 8) & 0xFF;
+		auto channel_link = bus_type_to_linklayer((obj->reservedAppText1 >> 16) & 0xFF);
+
+		bool already_mapped = false;
+		for (const auto& m : exporter->mappings) {
+			if (m.when.chl_id == channel_id && m.when.chl_link == channel_link) {
+				already_mapped = true;
+				break;
+			}
+		}
+		if (!already_mapped) {
+			configure_db_channel(exporter, obj);
+		}
 	}
 }
