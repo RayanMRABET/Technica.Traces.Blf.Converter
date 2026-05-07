@@ -51,6 +51,12 @@ void configure_db_channel(pcapng_exporter::PcapngExporter* exporter, AppText* ob
 		// Invalid mapping
 		return;
 	}
+	// Skip if this channel is already mapped (by JSON or XML)
+	for (const auto& m : exporter->mappings) {
+		if (m.when.chl_id == channel_id && m.when.chl_link == channel_link) {
+			return;
+		}
+	}
 	pcapng_exporter::channel_mapping mapping;
 	mapping.when.chl_id = channel_id;
 	mapping.when.chl_link = channel_link;
