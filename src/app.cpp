@@ -884,6 +884,7 @@ int main(int argc, char* argv[]) {
 	}
 	pcapng_exporter::PcapngExporter exporter = pcapng_exporter::PcapngExporter(args::get(outarg), maparg.Get());
 
+	int channel_offset = exporter.mappings.size();
 	uint64_t startDate_ns = calculate_startdate(&infile);
 
 	while (infile.good()) {

@@ -71,7 +71,10 @@ void configure_xml_channel(pcapng_exporter::PcapngExporter* exporter, tinyxml2::
 		mapping.when.chl_id = channel_id;
 		mapping.when.chl_link = bus_name_to_linklayer(channel_type);
 		mapping.change.inf_name = channel_name;
-		exporter->mappings.push_back(mapping);
+		exporter->mappings.insert(
+    		exporter->mappings.begin() + channel_offset,
+    		mapping
+		);
 	}
 
 	auto channel_properties = channel->FirstChildElement("channel_properties");
