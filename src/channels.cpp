@@ -8,7 +8,6 @@
 #include <sstream>
 #include <map>
 #include <pcapng_exporter/linktype.h>
-#include <algorithm>
 
 using namespace Vector::BLF;
 
@@ -43,6 +42,7 @@ std::optional<uint16_t> bus_name_to_linklayer(std::string bus_type) {
 	return std::nullopt;
 }
 
+static std::vector<pcapng_exporter::channel_mapping> pending_db_mappings;
 void configure_db_channel(pcapng_exporter::PcapngExporter* exporter, AppText* obj) {
 
 	auto channel_id = (obj->reservedAppText1 >> 8) & 0xFF;
@@ -56,8 +56,8 @@ void configure_db_channel(pcapng_exporter::PcapngExporter* exporter, AppText* ob
 	mapping.when.chl_id = channel_id;
 	mapping.when.chl_link = channel_link;
 	mapping.change.inf_name = db_channels[1];
-	exporter->mappings.push_back(mapping);
 
+	pending_db_mappings.push_back(mapping);
 }
 
 
@@ -68,19 +68,9 @@ void configure_xml_channel(pcapng_exporter::PcapngExporter* exporter, tinyxml2::
 	auto channel_name = std::string(channel->Attribute("network") ? channel->Attribute("network") : "");
 
 	if (!channel_type.empty() && !channel_name.empty()) {
-		auto link = bus_name_to_linklayer(channel_type);
-
-		exporter->mappings.erase(
-			std::remove_if(exporter->mappings.begin(), exporter->mappings.end(),
-				[&](const pcapng_exporter::channel_mapping& m) {
-					return m.when.chl_id == channel_id && m.when.chl_link == link;
-				}),
-			exporter->mappings.end()
-		);
-
 		pcapng_exporter::channel_mapping mapping;
 		mapping.when.chl_id = channel_id;
-		mapping.when.chl_link = link;
+		mapping.when.chl_link = bus_name_to_linklayer(channel_type);
 		mapping.change.inf_name = channel_name;
 		exporter->mappings.push_back(mapping);
 	}
@@ -161,4 +151,11 @@ void configure_channels(pcapng_exporter::PcapngExporter* exporter, AppText* obj)
 	if (obj->source == AppText::Source::DbChannelInfo) {
 		configure_db_channel(exporter, obj);
 	}
+}
+
+void flush_db_mappings(pcapng_exporter::PcapngExporter* exporter) {
+	for (const auto& m : pending_db_mappings) {
+		exporter->mappings.push_back(m);
+	}
+	pending_db_mappings.clear();
 }
