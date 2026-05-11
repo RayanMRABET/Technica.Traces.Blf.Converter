@@ -10,6 +10,4 @@
 
 void configure_channels(pcapng_exporter::PcapngExporter* exporter, Vector::BLF::AppText* obj);
 
-void flush_db_mappings(pcapng_exporter::PcapngExporter* exporter);
-
 #endif

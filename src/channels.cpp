@@ -42,7 +42,6 @@ std::optional<uint16_t> bus_name_to_linklayer(std::string bus_type) {
 	return std::nullopt;
 }
 
-static std::vector<pcapng_exporter::channel_mapping> pending_db_mappings;
 void configure_db_channel(pcapng_exporter::PcapngExporter* exporter, AppText* obj) {
 
 	auto channel_id = (obj->reservedAppText1 >> 8) & 0xFF;
@@ -56,8 +55,8 @@ void configure_db_channel(pcapng_exporter::PcapngExporter* exporter, AppText* ob
 	mapping.when.chl_id = channel_id;
 	mapping.when.chl_link = channel_link;
 	mapping.change.inf_name = db_channels[1];
+	exporter->mappings.push_back(mapping);
 
-	pending_db_mappings.push_back(mapping);
 }
 
 
@@ -151,11 +150,4 @@ void configure_channels(pcapng_exporter::PcapngExporter* exporter, AppText* obj)
 	if (obj->source == AppText::Source::DbChannelInfo) {
 		configure_db_channel(exporter, obj);
 	}
-}
-
-void flush_db_mappings(pcapng_exporter::PcapngExporter* exporter) {
-	for (const auto& m : pending_db_mappings) {
-		exporter->mappings.push_back(m);
-	}
-	pending_db_mappings.clear();
 }

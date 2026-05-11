@@ -1052,6 +1052,5 @@ int main(int argc, char* argv[]) {
 		delete ohb;
 	}
 	infile.close();
-	flush_db_mappings(&exporter);
 	return 0;
 }
